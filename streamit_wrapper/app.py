@@ -7,6 +7,21 @@ st.set_page_config(layout="wide")
 
 left_col, right_col = st.columns(2)
 
+
+def use_bi_encoder():
+    """
+    Here need to call the model and then do the following: 
+        
+        result_img = Image type
+
+        st.session_state["result_img"] = result_img
+    """
+    pass
+
+def use_poly_encoder():
+    pass
+
+
 with left_col:
     st.header("Input images")
 
@@ -20,13 +35,13 @@ with left_col:
             st.warning("Please load two images...")
         else:
             with st.spinner("Processing..."):
-                time.sleep(2)  
 
-                color = random.choice(["red", "green", "blue"])
-                result_img = Image.new("RGB", (256, 256), color=color)
+                if method == "Poly-Encoder":
+                    use_poly_encoder()
+                else:
+                    use_bi_encoder()
 
-                st.session_state["result_img"] = result_img
-
+                
 with right_col:
     st.header("Generated match")
 

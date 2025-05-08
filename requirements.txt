@@ -5,3 +5,4 @@ deepdish
 torch
 tqdm
 imageio
+streamlit

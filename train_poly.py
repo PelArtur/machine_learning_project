@@ -252,7 +252,7 @@ def cross_validate_model(all_buildings, detector_type='ORB', n_splits=4):
             val_loader=val_loader,
             desc_dim=desc_dim,
             lr=1e-3,
-            num_epochs=20,
+            num_epochs=10,
             device=device
         )
 
@@ -274,3 +274,10 @@ def cross_validate_model(all_buildings, detector_type='ORB', n_splits=4):
     print(f"\n=== Average over {n_splits} folds ===")
     print(f"Precision: {avg_scores[0]:.4f}, Recall: {avg_scores[1]:.4f}, F1: {avg_scores[2]:.4f}")
 
+
+def main():
+    all_buildings = ["brandenburg_gate", "buckingham_palace", "sacre_coeur", "st_peters_square"]
+    cross_validate_model(all_buildings, detector_type='ORB', n_splits=4)
+
+if __name__ == "__main__":
+    main()

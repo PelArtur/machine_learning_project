@@ -1,4 +1,5 @@
 import numpy as np
+import torch
 from torch.utils.data import Dataset
 from dataset_utils import get_image, get_dataset_data, extract_fundamental, detect_keypoints_and_descriptors, match_with_fundamental
 
@@ -85,7 +86,6 @@ class MatchingDataset(Dataset):
 
 
 
-
 class MatchingLightGlueDataset(Dataset):
     def __init__(self, datasets: List[str], 
                        detector_type: str = 'ORB', 
@@ -161,4 +161,21 @@ class MatchingLightGlueDataset(Dataset):
         return len(self.data)
     
     def __getitem__(self, index: int):
-        return self.data[index]
+        sample = self.data[index]
+        return {
+            'desc0': torch.FloatTensor(sample['desc0']),
+            'desc1': torch.FloatTensor(sample['desc1']),
+            'kpts0': torch.FloatTensor(sample['kpts0']),
+            'kpts1': torch.FloatTensor(sample['kpts1']),
+            'matches': torch.LongTensor(sample['matches'])
+        }
+
+
+def collate_fn(batch):
+    return {
+        'desc0': torch.stack([x['desc0'] for x in batch]),
+        'desc1': torch.stack([x['desc1'] for x in batch]),
+        'kpts0': torch.stack([x['kpts0'] for x in batch]),
+        'kpts1': torch.stack([x['kpts1'] for x in batch]),
+        'matches': [x['matches'] for x in batch]
+    }

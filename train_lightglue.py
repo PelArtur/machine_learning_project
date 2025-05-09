@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from poly_encoder import PolyEncoder
+from lightGlue import LightGlue
 from dataset_utils import *
 from dataset import *
 import random
@@ -235,14 +235,14 @@ def cross_validate_model(all_buildings, detector_type='ORB', n_splits=4):
         train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True, num_workers=4, pin_memory=True)
         val_loader = DataLoader(val_dataset, batch_size=16, shuffle=False, num_workers=4, pin_memory=True)
 
-        input_dim = 2 + desc_dim
-        model = PolyEncoder(
+        input_dim = 2 +desc_dim
+        
+        model = LightGlue(
             input_dim=input_dim,
-            hidden_dim=128,
-            output_dim=64,
-            num_codes=32,
-            dropout=0.1
+            hidden_dim=256,
+            gnn_layers=4
         )
+
 
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
@@ -265,7 +265,7 @@ def cross_validate_model(all_buildings, detector_type='ORB', n_splits=4):
 
         if f1 > best_f1:
             best_f1 = f1
-            torch.save(model.state_dict(), "best_poly_encoder.pth")
+            torch.save(model.state_dict(), "best_lightglue_encoder.pth")
 
         scores.append((precision, recall, f1))
 
